@@ -22,10 +22,12 @@ import { Component, ReactElement, ReactNode, useEffect, useMemo } from "react";
 import ruMessages from "devextreme/localization/messages/ru.json";
 import data from "@/mock/users.json";
 import TableView from "./components/TableView";
+import { Test } from "./indexedDB/Test";
 
 const App = () => {
   return (
-   <TableView />
+    <Test />
+
   );
 };
 
