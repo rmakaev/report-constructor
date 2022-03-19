@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/uuid": "^8.3.4",
     "devextreme": "21.2.6",
     "devextreme-react": "21.2.6",
     "dexie": "^3.2.1",
