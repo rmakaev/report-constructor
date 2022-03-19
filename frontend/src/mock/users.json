@@ -4,6 +4,7 @@
     "name": "Leanne Graham",
     "username": "Bret",
     "email": "Sincere@april.biz",
+    "age": 23,
     "address": {
       "street": "Kulas Light",
       "suite": "Apt. 556",
@@ -27,6 +28,7 @@
     "name": "Ervin Howell",
     "username": "Antonette",
     "email": "Shanna@melissa.tv",
+    "age": 33,
     "address": {
       "street": "Victor Plains",
       "suite": "Suite 879",
@@ -49,6 +51,7 @@
     "id": 3,
     "name": "Clementine Bauch",
     "username": "Samantha",
+    "age": 19,
     "email": "Nathan@yesenia.net",
     "address": {
       "street": "Douglas Extension",
@@ -72,6 +75,7 @@
     "id": 4,
     "name": "Patricia Lebsack",
     "username": "Karianne",
+    "age": 20,
     "email": "Julianne.OConner@kory.org",
     "address": {
       "street": "Hoeger Mall",
@@ -95,6 +99,7 @@
     "id": 5,
     "name": "Chelsey Dietrich",
     "username": "Kamren",
+    "age": 38,
     "email": "Lucio_Hettinger@annie.ca",
     "address": {
       "street": "Skiles Walks",
@@ -119,6 +124,7 @@
     "name": "Mrs. Dennis Schulist",
     "username": "Leopoldo_Corkery",
     "email": "Karley_Dach@jasper.info",
+    "age": 39,
     "address": {
       "street": "Norberto Crossing",
       "suite": "Apt. 950",
@@ -142,6 +148,7 @@
     "name": "Kurtis Weissnat",
     "username": "Elwyn.Skiles",
     "email": "Telly.Hoeger@billy.biz",
+    "age": 58,
     "address": {
       "street": "Rex Trail",
       "suite": "Suite 280",
@@ -165,6 +172,7 @@
     "name": "Nicholas Runolfsdottir V",
     "username": "Maxime_Nienow",
     "email": "Sherwood@rosamond.me",
+    "age": 23,
     "address": {
       "street": "Ellsworth Summit",
       "suite": "Suite 729",
@@ -188,6 +196,7 @@
     "name": "Glenna Reichert",
     "username": "Delphine",
     "email": "Chaim_McDermott@dana.io",
+    "age": 64,
     "address": {
       "street": "Dayna Park",
       "suite": "Suite 449",
@@ -211,6 +220,7 @@
     "name": "Clementina DuBuque",
     "username": "Moriah.Stanton",
     "email": "Rey.Padberg@karina.biz",
+    "age": 41,
     "address": {
       "street": "Kattie Turnpike",
       "suite": "Suite 198",
