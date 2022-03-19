@@ -37,6 +37,13 @@ const Toolbar: FC<ToolbarProps> = ({ label }) => {
     },
   };
 
+  const saveOptions = {
+    text: "Save",
+    onClick: () => {
+      notify("Succesfully saved!");
+    },
+  };
+
   return (
     <div style={{ paddingInline: 10 }}>
       <ExternalToolbar>
@@ -47,6 +54,7 @@ const Toolbar: FC<ToolbarProps> = ({ label }) => {
           widget="dxButton"
           options={window.location.pathname === "/chart-view" ? tableOptions : chartsOptions}
         />
+        <Item locateInMenu="always" widget="dxButton" options={saveOptions} />
       </ExternalToolbar>
     </div>
   );
