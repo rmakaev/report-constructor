@@ -9,7 +9,7 @@ const TableViewPage = () => {
     <>
       <Toolbar label={"fileName.d.tsx"} />
       chart-view
-      <TableView />
+
       {/* <ChartView /> */}
     </>
   );
