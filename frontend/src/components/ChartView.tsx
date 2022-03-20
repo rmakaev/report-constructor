@@ -5,9 +5,13 @@ import { useEffect, useMemo, useState } from "react";
 import Form, { SimpleItem, GroupItem } from "devextreme-react/form";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
+import styled from "styled-components";
 
 const chartTypes = ["spline", "bar", "line"];
-
+const ChartViewRoot = styled.div({
+    height: "100%",
+    overflow: "auto",
+});
 const ChartView = () => {
     const [keys, setKeys] = useState<string[]>([]);
 
@@ -62,7 +66,7 @@ const ChartView = () => {
     }, [columns]);
 
     return (
-        <>
+        <ChartViewRoot>
             <Form
                 onFieldDataChanged={setField}
                 formData={chartData}
@@ -138,7 +142,7 @@ const ChartView = () => {
 
                 <Export enabled={true} />
             </Chart>
-        </>
+        </ChartViewRoot>
     );
 };
 

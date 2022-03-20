@@ -4,13 +4,18 @@ import { db, resetDatabase } from "@/db/db";
 import { Button } from "devextreme-react/button";
 import FileUploader from "devextreme-react/file-uploader";
 import ProgressBar from "devextreme-react/progress-bar";
-import { FC, useRef, useState } from "react";
+import notify from "devextreme/ui/notify";
+import { FC, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { read, utils } from "xlsx";
 import "./Uploader.style.css";
 
 const allowedFileExtensions = [".json", ".xlsx", ".csv"];
+
+const isUrlValid = (url: string) => {
+  return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(url);
+};
 
 const Uploder: FC = () => {
   const [isDropZoneActive, setIsDropZoneActive] = useState(false);
@@ -22,6 +27,7 @@ const Uploder: FC = () => {
   const [inputURLValue, setInputURLValue] = useState("");
   const navigate = useNavigate();
   const currentDoc = useRef("");
+  const inputElRef = useRef<HTMLInputElement>(null!);
 
   const onDropZoneEnter = (e: any) => {
     if (e.dropZoneElement.id === "dropzone-external") {
@@ -115,6 +121,12 @@ const Uploder: FC = () => {
       .then((response) => response.json())
       .then((data) => {
         saveToDb(data);
+      })
+      .catch((e) => {
+        notify(e.message);
+      })
+      .finally(() => {
+        setIsURLInputActive(false);
       });
   };
 
@@ -123,12 +135,22 @@ const Uploder: FC = () => {
   };
 
   const onInputBlur = () => {
-    currentDoc.current = inputURLValue;
-    localStorage.setItem("fileName", inputURLValue);
-    fetchFile();
-    setInputURLValue("");
-    setIsURLInputActive(false);
+    if (isUrlValid(inputURLValue)) {
+      currentDoc.current = inputURLValue;
+      localStorage.setItem("fileName", inputURLValue);
+      fetchFile();
+      setInputURLValue("");
+      setIsURLInputActive(false);
+    } else {
+      notify("Url is not valid");
+    }
   };
+
+  useEffect(() => {
+    if (isURLInputActive) {
+      inputElRef.current.focus();
+    }
+  }, [isURLInputActive]);
 
   return (
     <div className="widget-container flex-box">
@@ -149,9 +171,26 @@ const Uploder: FC = () => {
         <div className="btns">
           <Button id="browse-button" width={130} text="BROWSE" />
           {isURLInputActive ? (
-            <input value={inputURLValue} onBlur={onInputBlur} onChange={onInputChange} />
+            <input
+              ref={inputElRef}
+              style={{ width: 130 }}
+              value={inputURLValue}
+              onBlur={onInputBlur}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onInputBlur();
+                }
+              }}
+              onChange={onInputChange}
+            />
           ) : (
-            <Button width={130} text="URL" onClick={() => setIsURLInputActive(true)} />
+            <Button
+              width={130}
+              text="URL"
+              onClick={() => {
+                setIsURLInputActive(true);
+              }}
+            />
           )}
         </div>
         <br />
