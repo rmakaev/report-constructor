@@ -1,36 +1,10 @@
-import { DataGrid, Form } from "devextreme-react";
-import Button from "devextreme-react/button";
-import Chart, {
-    ArgumentAxis,
-    Legend,
-    Series,
-    ValueAxis,
-    Label,
-    Export,
-    Tick,
-    CommonSeriesSettings,
-} from "devextreme-react/chart";
-import ArrayStore from "devextreme/data/array_store";
+import Chart, { Legend, Series, Label, Export } from "devextreme-react/chart";
 import "devextreme/dist/css/dx.material.blue.light.css";
-import {
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import data from "@/mock/users.json";
-import { Border } from "devextreme-react/bar-gauge";
-import styled from "styled-components";
-import { FieldsSelector } from "./FieldsSelector";
+import Form, { SimpleItem, GroupItem } from "devextreme-react/form";
 
-
-
-const FieldsSelectorWrap = styled.div`
-  width: 100%;
-  max-height: 220px;
-  padding: 5px;
-  display: flex;
-  background: #f7f3f3;
-`;
+const chartTypes = ["spline", "bar", "line"];
 
 const ChartView = () => {
     const [keys, setKeys] = useState<string[]>([]);
@@ -39,6 +13,10 @@ const ChartView = () => {
         argumentField: "name",
         valueField: "age",
         rotated: false,
+        showLabel: false,
+        showLegend: true,
+        legendColor: "#c45",
+        chartType: "bar",
     });
 
     const columns = useMemo(() => {
@@ -56,51 +34,80 @@ const ChartView = () => {
         }, {} as Record<string, boolean>);
 
         return Object.keys(uniqueColumnNames).map((columnName) => {
-            return columnName
-
+            return columnName;
         });
     }, []);
 
-    const setField = (value: string, key: string) => {
-        setChartData({ ...chartData, [key]: value });
+    const setField = ({ dataField, value }: any) => {
+        setChartData((prev) => ({ ...prev, [dataField]: value }));
     };
 
     useEffect(() => {
         columns && setKeys(columns);
     }, [columns]);
 
-
     return (
         <>
+            <Form
+                onFieldDataChanged={setField}
+                formData={chartData}
+                labelMode="floating"
+                labelLocation="left"
+                style={{ padding: '25px' }}
+            >
+                <GroupItem cssClass="first-group" colCount={6}>
+                    <GroupItem colSpan={2}>
+                        <SimpleItem
+                            dataField="argumentField"
+                            editorType="dxSelectBox"
+                            editorOptions={{
+                                items: keys.filter((x) => x !== chartData.valueField),
+                            }}
+                        />
+                        <SimpleItem
+                            dataField="valueField"
+                            editorType="dxSelectBox"
+                            editorOptions={{
+                                items: keys.filter((x) => x !== chartData.argumentField),
+                            }}
+                        />
+                    </GroupItem>
 
-            <FieldsSelectorWrap>
-                <FieldsSelector
-                    fieldKey="argumentField"
-                    exceptKey="valueField"
-                    chartData={chartData}
-                    setField={setField}
-                    fields={keys}
-                />
-                <FieldsSelector
-                    fieldKey="valueField"
-                    exceptKey="argumentField"
-                    chartData={chartData}
-                    setField={setField}
-                    fields={keys}
-                />
+                    <GroupItem colSpan={3}>
+                        <SimpleItem dataField="legendColor" editorType="dxColorBox" />
+                        <SimpleItem
+                            colSpan={2}
+                            dataField="chartType"
+                            editorType="dxSelectBox"
+                            editorOptions={{ items: chartTypes }}
+                        />
+                    </GroupItem>
+                    <GroupItem>
+                        <SimpleItem dataField="showLabel" editorType="dxCheckBox" />
+                        <SimpleItem dataField="showLegend" editorType="dxCheckBox" />
 
-            </FieldsSelectorWrap>
-            <Chart title="wow" dataSource={data} id="chart">
-                
+                        <SimpleItem dataField="rotated" editorType="dxCheckBox" />
+                    </GroupItem>
+                </GroupItem>
+            </Form>
+
+            <Chart
+                title="wow"
+                dataSource={data}
+                id="chart"
+                rotated={chartData.rotated}
+            >
                 <Series
                     valueField={chartData.valueField}
                     argumentField={chartData.argumentField}
                     name="My oranges"
-                    type="bar"
-                    color="#ffaa66"
-                />
+                    type={chartData.chartType}
+                    color={chartData.legendColor}
+                >
+                    <Label visible={chartData.showLabel} backgroundColor="#c18e92" />
+                </Series>
 
-                <Legend visible={false} />
+                <Legend visible={chartData.showLegend} />
 
                 <Export enabled={true} />
             </Chart>
