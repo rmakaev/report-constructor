@@ -64,13 +64,11 @@ const DataGrid = ({ data, columns, onCaptionRename, dataGridInstanceRef }: DataG
         storageKey: TABLE_CONFIG_STORAGE_KEY,
         type: "localStorage",
       }}
-      rowDragging={{
-        autoScroll: true,
-        allowReordering: true,
-        // allowDropInsideItem: true,
-        showDragIcons: false,
-        // dropFeedbackMode: "indicate",
-      }}
+      // rowDragging={{
+      //   autoScroll: true,
+      //   allowReordering: true,
+      //   showDragIcons: false,
+      // }}
       // selection={{
       //   mode: "single",
       //   showCheckBoxesMode: "none",
@@ -120,44 +118,6 @@ const DataGrid = ({ data, columns, onCaptionRename, dataGridInstanceRef }: DataG
         <Item name="addRowButton" />
         <Item name="columnChooserButton" />
         <Item name="searchPanel" />
-        {/* <Item
-          name="exportButton"
-          widget="dxButton"
-          options={{
-            text: "",
-            icon: "export",
-            // items: [
-            //   {
-            //     text: "Spreadsheet",
-            //     icon: "xlsxfile",
-            //     type: ExportFileType.Xlsx,
-            //   },
-            // ],
-              //   icon="export"
-    //   dropDownOptions={{ width: 200 }}
-    //   showArrowIcon={false}
-    //   stylingMode="text"
-    //   onItemClick={handleItemClick}
-    //   items={dropdownItems}
-          }}
-        /> */}
-        {/* <ToolbarExportButton onItemClick={onExport} /> */}
-        {/* <Item
-          location="after"
-          widget="dxButton"
-          options={{
-            icon: "export",
-            dropDownOptions: { width: 200 },
-            showArrowIcon: false,
-            onClick: (e: any) => console.log(e),
-            // items: [
-            //   {
-            //     text: "PDF",
-            //     icon: "pdffile",
-            //   },
-            // ],
-          }}
-        /> */}
         <Item location="after">
           <ToolbarExportButton onItemClick={handleToolbarExportButtonClick} />
         </Item>

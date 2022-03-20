@@ -1,16 +1,14 @@
 declare const Buffer: any;
 
+import { db } from "@/db/db";
 import { Button } from "devextreme-react/button";
 import FileUploader from "devextreme-react/file-uploader";
 import ProgressBar from "devextreme-react/progress-bar";
-import notify from "devextreme/ui/notify";
 import { FC, useRef, useState } from "react";
-import "./Uploader.style.css";
-import { read, utils } from "xlsx";
-import { v4 as uuidv4 } from "uuid";
-import { db } from "@/db/db";
-import { useLiveQuery } from "dexie-react-hooks";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import { read, utils } from "xlsx";
+import "./Uploader.style.css";
 
 const allowedFileExtensions = [".json", ".xlsx", ".csv"];
 

@@ -1,12 +1,14 @@
-import { FC } from "react";
-
-import { useNavigate } from "react-router-dom";
-
-import { Toolbar as ExternalToolbar, Item } from "devextreme-react/toolbar";
-
+import { Item, Toolbar as ExternalToolbar } from "devextreme-react/toolbar";
 import notify from "devextreme/ui/notify";
-
 import "devextreme/ui/select_box";
+import { FC } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+
+const ToolbarRoot = styled.div({
+  paddingInline: 10,
+  flexGrow: 0,
+});
 
 const Toolbar: FC = () => {
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ const Toolbar: FC = () => {
   };
 
   return (
-    <div style={{ paddingInline: 10 }}>
+    <ToolbarRoot>
       <ExternalToolbar>
         <Item location="before" widget="dxButton" options={uplodeOptions} />
         <Item location="center" locateInMenu="never" render={Label} />
@@ -52,7 +54,7 @@ const Toolbar: FC = () => {
         />
         <Item locateInMenu="always" widget="dxButton" options={saveOptions} />
       </ExternalToolbar>
-    </div>
+    </ToolbarRoot>
   );
 };
 

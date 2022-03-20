@@ -2,7 +2,7 @@ import useBoolean from "@/hooks/useBoolean";
 import DataSource from "devextreme/data/data_source";
 import LocalStore from "devextreme/data/local_store";
 import "devextreme/dist/css/dx.material.blue.light.css";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import DataGrid from "./DataGrid";
 import RenameCaptionPopup from "./RenameCaptionPopup";
 
@@ -24,38 +24,43 @@ const TableView = ({ data }: TableViewProps) => {
 
   const dataSource = useMemo(() => {
     return new DataSource({
+      store: new LocalStore({
+        data,
+        key: "id",
+        name: "table-data",
+      }),
       // @ts-ignore
       // load: (data: any) => console.log(data),
       // load(data: any) { console.log(data); },
-      store: new LocalStore({
-        data,
-        name: "table-data",
-      }),
+      // store: new LocalStore({
+      //   data,
+      //   name: "table-data",
+      // }),
       // store: new ArrayStore({
       //   data,
       //   key: "id",
       // }),
     });
-  }, []);
+  }, [data]);
 
   // useEffect(() => {
   //   console.log(store);
   // }, [store]);
 
-  useEffect(() => {
-    const dataGridInstance = dataGridInstanceRef.current;
+  // useEffect(() => {
+  //   const dataGridInstance = dataGridInstanceRef.current;
 
-    console.log(dataGridInstance);
+  //   console.log(dataGridInstance);
 
-    dataGridInstance.state(data);
+  //   dataGridInstance.state(data);
 
-    dataSource.load().then((data) => {
-      console.log(dataSource.store());
-    });
-    // store.load()
-    // store.on("", (e: any) => console.log(e));
-    // console.log();
-  }, [dataSource]);
+  //   dataSource.load().then((data) => {
+  //     console.log(dataSource.store());
+  //   });
+  //   // store.load()
+  //   // store.on("", (e: any) => console.log(e));
+  //   // console.log();
+  // }, [dataSource]);
 
   const columns = useMemo(() => {
     // @ts-ignore
@@ -64,7 +69,7 @@ const TableView = ({ data }: TableViewProps) => {
     }, new Set<string>());
 
     return [...uniqueColumnNames];
-  }, []);
+  }, [data]);
 
   const handleCaptionRename = (column: { dataField: string; caption: string }) => {
     showRenameCaptionPopup();
