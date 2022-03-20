@@ -12,6 +12,7 @@ const ChartView = () => {
     const [chartData, setChartData] = useState({
         argumentField: "name",
         valueField: "age",
+        tableName: 'table name',
         rotated: false,
         showLabel: false,
         showLegend: true,
@@ -53,7 +54,7 @@ const ChartView = () => {
                 formData={chartData}
                 labelMode="floating"
                 labelLocation="left"
-                style={{ padding: '25px' }}
+                style={{ padding: '9px' }}
             >
                 <GroupItem cssClass="first-group" colCount={6}>
                     <GroupItem colSpan={2}>
@@ -71,6 +72,7 @@ const ChartView = () => {
                                 items: keys.filter((x) => x !== chartData.argumentField),
                             }}
                         />
+
                     </GroupItem>
 
                     <GroupItem colSpan={3}>
@@ -81,18 +83,29 @@ const ChartView = () => {
                             editorType="dxSelectBox"
                             editorOptions={{ items: chartTypes }}
                         />
+
                     </GroupItem>
-                    <GroupItem>
+                    <GroupItem colSpan={1}>
                         <SimpleItem dataField="showLabel" editorType="dxCheckBox" />
                         <SimpleItem dataField="showLegend" editorType="dxCheckBox" />
 
                         <SimpleItem dataField="rotated" editorType="dxCheckBox" />
                     </GroupItem>
                 </GroupItem>
+                <GroupItem colCount={6}>
+
+                    <SimpleItem colSpan={6}
+                        dataField="tableName"
+                    />
+
+
+                </GroupItem>
+
             </Form>
 
             <Chart
-                title="wow"
+                style={{ padding: '9px' }}
+                title={chartData.tableName}
                 dataSource={data}
                 id="chart"
                 rotated={chartData.rotated}
