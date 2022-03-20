@@ -68,7 +68,7 @@ const TableView = ({ data }: TableViewProps) => {
       return new Set([...acc, ...Object.keys(dataItem)]);
     }, new Set<string>());
 
-    return [...uniqueColumnNames];
+    return [...uniqueColumnNames].map((dataField) => ({ dataField }));
   }, [data]);
 
   const handleCaptionRename = (column: { dataField: string; caption: string }) => {

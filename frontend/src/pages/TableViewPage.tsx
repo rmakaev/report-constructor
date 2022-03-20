@@ -1,12 +1,12 @@
 import TableView from "@/components/TableView";
 import Toolbar from "@/components/Toolbar";
-import data from "@/mock/users.json";
+import data from "@/mock/mock.json";
 import styled from "styled-components";
 
 const TableViewLayout = styled.div({
   height: "100%",
-  display: "grid",
-  gridTemplateRows: "auto 1fr",
+  display: "flex",
+  flexDirection: "column",
 });
 
 const TableViewPage = () => {
