@@ -3,21 +3,23 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 
-function FriendList({ currentDoc }) {
+function FriendList({ currentDocId }) {
+    console.log(currentDocId, 'currentDocId idd');
+
     const friends = useLiveQuery(
-        async () => { 
+        async () => {
             const friends = await db.items
-                .where({ docId: currentDoc })
+                .where({ docId: currentDocId })
                 .toArray();
 
-             return friends;
-        },
-         [currentDoc]
-    );
+            return friends;
+        }
+        , [currentDocId]);
+    console.log(friends);
 
     return <ul>
         {friends?.map(friend => <li key={friend.id}>
-            {friend.name}
+            {friend.name} - {friend.email}
         </li>)}
     </ul>;
 }
@@ -26,7 +28,7 @@ export const Test = () => {
     const [tempData, setTempData] = useState([]);
     const [loadedDate, setLoadedData] = useState([]);
     const [tableName, setTableName] = useState("default");
-    const [currentDoc, setCurrentDoc] = useState('');
+    const [currentDocId, setCurrentDoc] = useState('');
 
 
     const itemsTest = useLiveQuery(
@@ -34,13 +36,13 @@ export const Test = () => {
             //
             // Query Dexie's API
             //
-            const items1 = await db.items.where({ docId: currentDoc }).toArray()
+            const items1 = await db.items.where({ docId: currentDocId }).toArray()
 
             // Return result
             return items1;
         },
         // specify vars that affect query:
-        [currentDoc]
+        [currentDocId]
     );
 
     const hasAnyDocs = useLiveQuery(async () => {
@@ -64,14 +66,21 @@ export const Test = () => {
 
 
     const saveToDb = async () => {
-        await db.docs.add({ name: tableName });
+        let id
+        if (!currentDocId) {
+            id = uuidv4()
+            await db.docs.add({ id, name: tableName });
+        } else {
+            id = currentDocId
+            db.items.where({ docId: currentDocId }).delete()
+        }
 
         tempData.forEach((user: any) => {
             try {
                 db.items.add({
                     ...user,
                     id: uuidv4(),
-                    docId: tableName,
+                    docId: id,
                 });
             } catch (error) {
                 console.log(error, "error");
@@ -79,12 +88,7 @@ export const Test = () => {
         });
     };
 
-    useEffect(() => {
-        if (docs) {
-            let first = docs[0]
-            first && setCurrentDoc(first?.name)
-        }
-    }, [docs])
+
 
     return (
         <div>
@@ -98,23 +102,23 @@ export const Test = () => {
             <button onClick={saveToDb}>save to indexedDB</button>
             <div>
                 <label htmlFor="c">current doc</label>
-                <input type="text" readOnly value={currentDoc} />
+                <input type="text" readOnly value={currentDocId} />
             </div>
             <br />
             {hasAnyDocs ? (
                 <>
                     <select
-                        value={currentDoc}
+                        value={currentDocId}
                         onChange={(e) => {
                             setCurrentDoc(e.target.value);
                         }}
-                    >
-                        {docs?.map(({ name }, idx) => (
-                            <option key={idx} value={name}>{name}</option>
+                    >   <option value="">none</option>
+                        {docs?.map(({ id, name }) => (
+                            <option key={id} value={id}>{name}</option>
                         ))}
                     </select>
 
-                    {itemsTest && <FriendList currentDoc={currentDoc} />}
+                    {itemsTest && <FriendList currentDocId={currentDocId} />}
                 </>
             ) : (
                 "no docs yet"

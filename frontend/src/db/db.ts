@@ -2,20 +2,20 @@ import Dexie, { Table } from "dexie";
 import { Doc } from "./Doc";
 
 export class DocsDB extends Dexie {
-  docs!: Table<Doc, number>;
+  docs!: Table<any>;
   items!: Table<any>;
   constructor() {
     super("DocsDB");
     this.version(1).stores({
-      docs: "++id",
-      items: "++uuid,docId",
+      docs: "++id, name",
+      items: "++id, docId",
     });
   }
 
-  deleteList(DocId: number) {
+  deleteList(uuid: string) {
     return this.transaction("rw", this.items, this.docs, () => {
-      this.items.where({ DocId }).delete();
-      this.docs.delete(DocId);
+      this.items.where({ DocId: uuid }).delete();
+      this.docs.delete(uuid);
     });
   }
 }

@@ -1,4 +1,4 @@
 export interface Doc {
-  id?: number;
+  uuid?: string;
   name: string;
 }

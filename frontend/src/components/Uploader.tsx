@@ -35,16 +35,25 @@ const Uploder: FC = () => {
     }
   };
 
-  const hasAnyDocs = useLiveQuery(async () => {
-    const listCount = await db.docs.where({ name: currentDoc }).count();
-    return listCount > 0;
+  const currentDocId = useLiveQuery(async () => {
+    console.log(currentDoc, 'currentDoc at hasAnydocs');
+    if (!currentDoc) return
+    const list = await db.docs.where({ name: currentDoc }).toArray();
+    console.log(list, 'list');
+
+    return list.uuid;
   }, [currentDoc]);
 
-  const saveToDb = async (data: any, id = "") => {
-    await db.docs.add({ name: id || currentDoc });
+  const saveToDb = async (data: any) => {
+    if (!currentDoc) return
+    console.log(currentDoc, ' currentDoc at saveDB');
+    if (!currentDocId) {
+      await db.docs.add({ uuid: uuidv4(), name: currentDoc });
 
-    if (hasAnyDocs) {
-      db.items.where({ docId: id || currentDoc }).delete();
+    }
+
+    if (currentDocId) {
+      db.items.where({ docId: currentDocId }).delete();
     }
 
     data.forEach((user: any) => {
@@ -52,7 +61,7 @@ const Uploder: FC = () => {
         db.items.add({
           ...user,
           uuid: uuidv4(),
-          docId: id || currentDoc,
+          docId: currentDoc,
         });
       } catch (error) {
         console.log(error, "error");
@@ -97,10 +106,11 @@ const Uploder: FC = () => {
   };
 
   const fetchFile = () => {
+    setCurrentDoc(inputURLValue)
     return fetch(inputURLValue)
       .then((response) => response.json())
       .then((data) => {
-        saveToDb(data, inputURLValue);
+        saveToDb(data);
       });
   };
 
@@ -118,9 +128,8 @@ const Uploder: FC = () => {
     <div className="widget-container flex-box">
       <div
         id="dropzone-external"
-        className={`flex-box ${
-          isDropZoneActive ? "dx-theme-accent-as-border-color dropzone-active" : "dx-theme-border-color"
-        }`}
+        className={`flex-box ${isDropZoneActive ? "dx-theme-accent-as-border-color dropzone-active" : "dx-theme-border-color"
+          }`}
       ></div>
       <div className="upload">
         <h3 style={{ marginBottom: 10 }}>
