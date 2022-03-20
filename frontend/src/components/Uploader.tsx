@@ -4,12 +4,13 @@ import { Button } from "devextreme-react/button";
 import FileUploader from "devextreme-react/file-uploader";
 import ProgressBar from "devextreme-react/progress-bar";
 import notify from "devextreme/ui/notify";
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import "./Uploader.style.css";
 import { read, utils } from "xlsx";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "@/db/db";
 import { useLiveQuery } from "dexie-react-hooks";
+import { useNavigate } from "react-router-dom";
 
 const allowedFileExtensions = [".json", ".xlsx", ".csv"];
 
@@ -21,7 +22,8 @@ const Uploder: FC = () => {
   const [progressValue, setprogressValue] = useState(0);
   const [isURLInputActive, setIsURLInputActive] = useState(false);
   const [inputURLValue, setInputURLValue] = useState("");
-  const [currentDoc, setCurrentDoc] = useState("");
+  const navigate = useNavigate();
+  const currentDoc = useRef("");
 
   const onDropZoneEnter = (e: any) => {
     if (e.dropZoneElement.id === "dropzone-external") {
@@ -35,35 +37,29 @@ const Uploder: FC = () => {
     }
   };
 
-  const hasAnyDocs = useLiveQuery(async () => {
-    const listCount = await db.docs.where({ name: currentDoc }).count();
-    return listCount > 0;
-  }, [currentDoc]);
-
-  const saveToDb = async (data: any, id = "") => {
-    await db.docs.add({ name: id || currentDoc });
-
-    if (hasAnyDocs) {
-      db.items.where({ docId: id || currentDoc }).delete();
-    }
+  const saveToDb = async (data: any) => {
+    await db.docs.add({ name: "currentFile" });
 
     data.forEach((user: any) => {
       try {
         db.items.add({
           ...user,
           uuid: uuidv4(),
-          docId: id || currentDoc,
+          docId: "currentFile",
         });
       } catch (error) {
         console.log(error, "error");
       }
     });
+
+    navigate("/table-view");
   };
 
   const onUploaded = (e: any) => {
     const { file } = e;
 
-    setCurrentDoc(file.name);
+    currentDoc.current = file.name;
+    localStorage.setItem("fileName", file.name);
 
     const fileReader = new FileReader();
 
@@ -77,7 +73,7 @@ const Uploder: FC = () => {
       /* Convert array of arrays */
       const data = utils.sheet_to_json(ws, { header: 1 });
       /* Update state */
-      console.log(currentDoc, data);
+
       saveToDb(data);
     };
     fileReader.readAsArrayBuffer(file);
@@ -100,7 +96,7 @@ const Uploder: FC = () => {
     return fetch(inputURLValue)
       .then((response) => response.json())
       .then((data) => {
-        saveToDb(data, inputURLValue);
+        saveToDb(data);
       });
   };
 
@@ -109,6 +105,8 @@ const Uploder: FC = () => {
   };
 
   const onInputBlur = () => {
+    currentDoc.current = inputURLValue;
+    localStorage.setItem("fileName", inputURLValue);
     fetchFile();
     setInputURLValue("");
     setIsURLInputActive(false);

@@ -7,7 +7,7 @@ export class DocsDB extends Dexie {
   constructor() {
     super("DocsDB");
     this.version(1).stores({
-      docs: "++id",
+      docs: "++id, name",
       items: "++uuid,docId",
     });
   }
