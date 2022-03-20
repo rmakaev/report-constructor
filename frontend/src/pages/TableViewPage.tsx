@@ -1,6 +1,8 @@
 import TableView from "@/components/TableView";
 import Toolbar from "@/components/Toolbar";
-import data from "@/mock/mock.json";
+import { db } from "@/db/db";
+//import data from "@/mock/users.json";
+import { useLiveQuery } from "dexie-react-hooks";
 import styled from "styled-components";
 
 const TableViewLayout = styled.div({
@@ -10,6 +12,16 @@ const TableViewLayout = styled.div({
 });
 
 const TableViewPage = () => {
+  const data = useLiveQuery(
+    async () => {
+      const data = await db.items
+        .where({ docId: 'currentFile' })
+        .toArray();
+
+      return data;
+    },
+    []
+  );
   // const sourceData =
 
   // useEffect(() => {
@@ -35,7 +47,11 @@ const TableViewPage = () => {
   return (
     <TableViewLayout>
       <Toolbar />
-      <TableView data={data} />
+      {data && <TableView data={data.map(x => {
+        delete x.uuid
+        delete x.docId
+        return x
+      })} />}
     </TableViewLayout>
   );
 };

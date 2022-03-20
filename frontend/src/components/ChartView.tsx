@@ -1,13 +1,26 @@
 import Chart, { Legend, Series, Label, Export } from "devextreme-react/chart";
 import "devextreme/dist/css/dx.material.blue.light.css";
 import { useEffect, useMemo, useState } from "react";
-import data from "@/mock/users.json";
+//import data from "@/mock/users.json";
 import Form, { SimpleItem, GroupItem } from "devextreme-react/form";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/db/db";
 
 const chartTypes = ["spline", "bar", "line"];
 
 const ChartView = () => {
     const [keys, setKeys] = useState<string[]>([]);
+
+    const data = useLiveQuery(
+        async () => {
+            const data = await db.items
+                .where({ docId: 'currentFile' })
+                .toArray();
+
+            return data;
+        },
+        []
+    );
 
     const [chartData, setChartData] = useState({
         argumentField: "name",
@@ -21,6 +34,7 @@ const ChartView = () => {
     });
 
     const columns = useMemo(() => {
+        if (!data) return
         const uniqueColumnNames = data.reduce((acc, post) => {
             for (const key of Object.keys(post)) {
                 if (
@@ -37,7 +51,7 @@ const ChartView = () => {
         return Object.keys(uniqueColumnNames).map((columnName) => {
             return columnName;
         });
-    }, []);
+    }, [data]);
 
     const setField = ({ dataField, value }: any) => {
         setChartData((prev) => ({ ...prev, [dataField]: value }));

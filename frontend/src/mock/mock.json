@@ -1,6 +1,6 @@
 [
-    ["user","dbrith","city","time"],
-    ["Mich", "22.22.2000", "Prague", 19],
-    ["Bob", "13.12.2000", "Paris",39],
-    ["Elona", "11.11.1999", "Dallas",42]
+  ["id", "user", "dbrith", "city", "time"],
+  [1, "Mich", "22.22.2000", "Prague", 19],
+  [2, "Bob", "13.12.2000", "Paris", 39],
+  [3, "Elona", "11.11.1999", "Dallas", 42]
 ]

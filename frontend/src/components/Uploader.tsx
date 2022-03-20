@@ -1,6 +1,6 @@
 declare const Buffer: any;
 
-import { db } from "@/db/db";
+import { db, resetDatabase } from "@/db/db";
 import { Button } from "devextreme-react/button";
 import FileUploader from "devextreme-react/file-uploader";
 import ProgressBar from "devextreme-react/progress-bar";
@@ -36,35 +36,55 @@ const Uploder: FC = () => {
   };
 
   const saveToDb = async (data: any) => {
-    await db.docs.add({ name: "currentFile" });
+    resetDatabase().then(async () => {
+      await db.docs.add({ name: "currentFile" });
 
-    data.forEach((user: any) => {
-      try {
-        db.items.add({
-          ...user,
-          uuid: uuidv4(),
-          docId: "currentFile",
-        });
-      } catch (error) {
-        console.log(error, "error");
-      }
-    });
+      data.forEach((user: any) => {
+        try {
+          db.items.add({
+            ...user,
+            uuid: uuidv4(),
+            docId: "currentFile",
+          });
+        } catch (error) {
+          console.log(error, "error");
+        }
+      });
+      navigate("/table-view");
+    })
 
-    navigate("/table-view");
+
+
   };
 
   const onUploaded = (e: any) => {
     const { file } = e;
+
+
 
     currentDoc.current = file.name;
     localStorage.setItem("fileName", file.name);
 
     const fileReader = new FileReader();
 
+    if (file.type === 'application/json') {
+
+      var reader = new FileReader();
+      reader.onload = function () {
+
+
+        saveToDb(JSON.parse(reader.result))
+      };
+      reader.readAsText(file);
+      return
+    }
+
     fileReader.onload = (e: any) => {
       /* Parse data */
       const ab = e.target.result;
       const wb = read(ab, { type: "array" });
+
+
       /* Get first worksheet */
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
@@ -114,9 +134,8 @@ const Uploder: FC = () => {
     <div className="widget-container flex-box">
       <div
         id="dropzone-external"
-        className={`flex-box ${
-          isDropZoneActive ? "dx-theme-accent-as-border-color dropzone-active" : "dx-theme-border-color"
-        }`}
+        className={`flex-box ${isDropZoneActive ? "dx-theme-accent-as-border-color dropzone-active" : "dx-theme-border-color"
+          }`}
       ></div>
       <div className="upload">
         <h3 style={{ marginBottom: 10 }}>
