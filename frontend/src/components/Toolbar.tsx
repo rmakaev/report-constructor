@@ -8,13 +8,9 @@ import notify from "devextreme/ui/notify";
 
 import "devextreme/ui/select_box";
 
-interface ToolbarProps {
-  label: string;
-}
-
-const Toolbar: FC<ToolbarProps> = ({ label }) => {
+const Toolbar: FC = () => {
   const navigate = useNavigate();
-  const Label = () => <strong>{label}</strong>;
+  const Label = () => <strong>{localStorage.getItem("fileName")}</strong>;
 
   const uplodeOptions = {
     text: "Upload file",
