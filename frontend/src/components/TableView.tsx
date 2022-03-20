@@ -21,9 +21,7 @@ import "devextreme/dist/css/dx.material.blue.light.css";
 import { Component, ReactElement, ReactNode, useEffect, useMemo } from "react";
 import data from "@/mock/users.json";
 
-
 const TableView = () => {
-
   const columns = useMemo(() => {
     const uniqueColumnNames = data.reduce((acc, post) => {
       for (const key of Object.keys(post)) {
@@ -31,14 +29,14 @@ const TableView = () => {
           acc[key] = true;
         }
       }
-  
+
       return acc;
     }, {} as Record<string, boolean>);
 
-    return Object.keys(uniqueColumnNames).map(columnName => {
+    return Object.keys(uniqueColumnNames).map((columnName) => {
       return {
-        dataField: columnName
-      }
+        dataField: columnName,
+      };
     });
   }, []);
 
@@ -59,12 +57,14 @@ const TableView = () => {
       <HeaderFilter visible allowSearch searchTimeout={200} />
       <Grouping contextMenuEnabled />
       <GroupPanel allowColumnDragging visible />
-      <Export enabled excelFilterEnabled  />
+      <Export enabled excelFilterEnabled />
       <SearchPanel visible />
       <ColumnChooser enabled />
       <Editing mode="cell" allowUpdating={true} />
 
-      {columns.map((column, i) => <Column minWidth={100} key={i} {...column} />)}
+      {columns.map((column, i) => (
+        <Column minWidth={100} key={i} {...column} />
+      ))}
     </DataGrid>
   );
 };

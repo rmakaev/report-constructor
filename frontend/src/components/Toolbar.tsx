@@ -40,7 +40,7 @@ const Toolbar: FC<ToolbarProps> = ({ label }) => {
   const saveOptions = {
     text: "Save",
     onClick: () => {
-      notify("Succesfully saved!");
+      notify("Successfully saved");
     },
   };
 

@@ -2,14 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import ruMessages from "devextreme/localization/messages/ru.json";
-import { locale, loadMessages } from "devextreme/localization";
 import TableViewPage from "./pages/TableViewPage";
 import ChartViewPage from "./pages/ChartViewPage";
 import UploadPage from "./pages/UploadPage";
-
-loadMessages(ruMessages);
-locale("ru");
+import "devextreme/dist/css/dx.material.blue.light.compact.css";
 
 ReactDOM.render(
   <React.StrictMode>
